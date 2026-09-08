@@ -1,1 +1,26 @@
-
+name: Mahna PhD Search
+on:
+  schedule:
+    # هر روز ساعت ۶ صبح UTC (~۹:۳۰ صبح به وقت تهران). خودت می‌تونی این عدد رو عوض کنی.
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}  # امکان اجرای دستی از تب Actions در گیت‌هاب
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run PhD search pipeline
+        env:
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+        run: python mahna_phd_search.py
