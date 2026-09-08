@@ -1,0 +1,5 @@
+requests
+python-dateutil
+gspread
+google-auth
+beautifulsoup4
